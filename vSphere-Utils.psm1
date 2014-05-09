@@ -11,7 +11,6 @@ Function Disconnect-vCenter {
   Disconnect-ViServer -server * -confirm:$False
 }
 
-
 Function Create-VM {
     <#
     .SYNOPSIS
@@ -32,8 +31,9 @@ Function Create-VM {
      [String]$VM="vmtest", 
      [String]$ESXHOST="esxvcb3.asl.lab.emc.com",
      [String]$DATASTORE="iLUN0",
-     [Int]$NUM
+     [Int]$NUM,
      [Int]$STARTNO=1
+     [String]$VLAN=244
   )    
   $NUM = $NUM + 1
   For ($i = $STARTNO; $i -lt $NUM;$i++) {
