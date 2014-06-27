@@ -31,13 +31,14 @@ Function Create-VM {
      [String]$VM="vmtest", 
      [String]$ESXHOST="esxvcb3.asl.lab.emc.com",
      [String]$DATASTORE="iLUN0",
-     [Int]$NUM,
-     [Int]$STARTNO=1
-     [String]$VLAN=244
+     [Int]$NUM=10,
+     [Int]$STARTNO=1,
+     [String]$VLAN=244,
+     [String]$LOC
   )    
   $NUM = $NUM + 1
   For ($i = $STARTNO; $i -lt $NUM;$i++) {
-    New-VM -Name $VM$i -ResourcePool $ESXHOST -Datastore $DATASTORE -NumCPU 2 -MemoryGB 2 -DiskGB 2 -NetworkName "VLAN244" `
-      -Floppy -CD -DiskStorageFormat Thin -GuestID winNetDatacenterGuest
+    New-VM -Name $VM$i -ResourcePool $ESXHOST -Datastore $DATASTORE -NumCPU 2 -MemoryGB 2 -DiskGB 2 -NetworkName $VLAN `
+      -Floppy -CD -DiskStorageFormat Thin -GuestID winNetDatacenterGuest -Location $LOC
   } 
 }
