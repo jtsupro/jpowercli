@@ -9,15 +9,15 @@ Get-Moref use PowerCLI cmdlet to trieve list ESX,datastore,network from vCenter 
 .PARAMETER vcenter
 .PARAMETER username
 .PARAMETER password
-.PARAMETER output file html
+
 .EXAMPLE
 Get-Moref
 #>
 
 param (
     [parameter(mandatory=$true,HelpMessage="Enter FQDN vCenter  name or ip")]$vCenter,
-    [parameter(mandatory=$true,HelpMessage="Enter vCenter username")]$username,
-    [parameter(mandatory=$true,HelpMessage="Enter output filename you want")]$outfile=$vCenter
+    [parameter(mandatory=$true),HelpMessage="Enter vCenter username"]$username,
+    [parameter(mandatory)=$true,HelpMessage="Enter output filename you want"]$outfile
 )
 
 $password = Read-Host -assecurestring "Enter admin or root vcenter password"
@@ -25,19 +25,10 @@ $password = Read-Host -assecurestring "Enter admin or root vcenter password"
 # need to convert secure string to string
 $decodedpassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password))
 
-Connect-VIServer -server $vcenter -username $username -password $decodedpassword
-
+Connect-VIServer -server $server -username $user -password $decodedpassword
 $esxhosts = get-view -viewtype hostsystem
 $datastores = get-view -viewtype datastore
 $network = get-view -viewtype network
-$folder = get-view -viewtype folder
-$resourcepool = get-view -viewtype resourcepool
-
-#create c:\temp if it does not exist
-if (!(Test-path "c:\temp")){
-    New-item -itemtype directory -path "c:\temp"
-}
-
 
 # check if file html exists
 if (Test-Path "c:\temp\$outfile.html"){
@@ -47,7 +38,7 @@ if (Test-Path "c:\temp\$outfile.html"){
 
 function getMoref {
     param($items)   
-    $objs = @() 
+    $objs = @() |
     foreach ($item in $items){
         $obj = New-Object PSObject
         $obj | add-member -type NoteProperty -name vSphere_name -value $item.name
@@ -61,9 +52,4 @@ function getMoref {
 getMoref($esxhosts)
 getMoref($datastores)
 getMoref($network)
-getMoref($folder)
-getMoref($resourcepool)
-
 Disconnect-VIServer -server * -Confirm:$False
-
-write-host "completed. you can check file html c:\temp\$outfile.html."
