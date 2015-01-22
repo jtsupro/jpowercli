@@ -26,7 +26,8 @@ $decodedpassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([Sy
 Connect-VIServer -server $vCenter -username $username -password $decodedpassword
 
 # Get list powered on VM and shut them down
-Get-VM | where {$_.PowerState -eq "PoweredOn"}
+Get-VM | where {$_.PowerState -eq "PoweredOn"} 
+# Get-VM | where {$_.PowerState -eq "PoweredOn"} | shutdown-vmguest
 
 
 Disconnect-VIServer -server * -confirm:$FALSE
